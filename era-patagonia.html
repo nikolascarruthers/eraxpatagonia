@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Era × Patagonia — Intelligence for the Outdoors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Helvetica+Neue:wght@200;300;400&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0908;
+    --stone: #2c2b29;
+    --ash: #4a4845;
+    --granite: #7a7672;
+    --sand: #b8b0a4;
+    --linen: #e8e2d9;
+    --offwhite: #f4f0ea;
+    --cream: #faf7f2;
+    --forest: #2d3b2e;
+    --moss: #4a5c3f;
+    --lichen: #8a9e7a;
+    --rust: #8b4a2f;
+    --serif: 'EB Garamond', Georgia, serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--linen);
+    font-family: var(--serif);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: var(--linen);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor.expand {
+    width: 40px;
+    height: 40px;
+    background: var(--linen);
+    opacity: 0.15;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 2rem 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    mix-blend-mode: difference;
+  }
+  .nav-mark {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--linen);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .nav-year {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--linen);
+    opacity: 0.4;
+  }
+
+  /* SECTIONS */
+  section {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ============ HERO ============ */
+  #hero {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3.5rem 6rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 80% at 80% 20%, rgba(45,59,46,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(139,74,47,0.08) 0%, transparent 60%);
+  }
+
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--lichen);
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.3s forwards;
+  }
+
+  .hero-headline {
+    font-size: clamp(3.5rem, 9vw, 9rem);
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: var(--offwhite);
+    max-width: 90%;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1.4s ease 0.5s forwards;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .hero-sub {
+    font-family: var(--sans);
+    font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+    font-weight: 200;
+    letter-spacing: 0.08em;
+    color: var(--granite);
+    max-width: 400px;
+    line-height: 1.7;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: fadeUp 1.4s ease 0.8s forwards;
+  }
+
+  .hero-scroll {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+
+  .scroll-line {
+    width: 60px;
+    height: 1px;
+    background: var(--ash);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 1px;
+    background: var(--lichen);
+    animation: slideLine 2s ease 1.5s infinite;
+  }
+
+  .scroll-text {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--granite);
+  }
+
+  .hero-index {
+    position: absolute;
+    right: 3.5rem;
+    bottom: 6rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--ash);
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+  }
+
+  /* ============ WHY PATAGONIA ============ */
+  #why-patagonia {
+    background: var(--black);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 0;
+  }
+
+  .section-visual {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .visual-fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--forest) 0%, #1a2419 40%, var(--black) 100%);
+  }
+
+  .visual-texture {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 300px 300px;
+  }
+
+  .visual-number {
+    position: absolute;
+    top: 3rem;
+    left: 3rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--moss);
+    text-transform: uppercase;
+  }
+
+  .visual-shape {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contour-svg {
+    width: 70%;
+    opacity: 0.12;
+    stroke: var(--lichen);
+  }
+
+  .section-content {
+    padding: 6rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lichen);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-tag::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--lichen);
+    display: inline-block;
+  }
+
+  .section-headline {
+    font-size: clamp(2.2rem, 4vw, 4rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    color: var(--cream);
+    margin-bottom: 3rem;
+  }
+
+  .section-headline em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .section-body {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--granite);
+    max-width: 420px;
+    margin-bottom: 3rem;
+  }
+
+  .section-body + .section-body {
+    margin-top: -1rem;
+  }
+
+  .pull-quote {
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+    font-style: italic;
+    color: var(--sand);
+    line-height: 1.45;
+    border-left: 1px solid var(--moss);
+    padding-left: 2rem;
+    margin: 2rem 0;
+  }
+
+  /* ============ WHY ERA ============ */
+  #why-era {
+    background: var(--offwhite);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8rem 3.5rem;
+    position: relative;
+  }
+
+  #why-era .hero-grain {
+    opacity: 0.025;
+    filter: invert(1);
+  }
+
+  .era-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  .era-left {
+    padding-right: 6rem;
+    border-right: 1px solid var(--sand);
+  }
+
+  .era-right {
+    padding-left: 6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .era-headline {
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--stone);
+    margin-bottom: 3rem;
+  }
+
+  .era-headline em {
+    font-style: italic;
+    color: var(--ash);
+  }
+
+  .era-body {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--ash);
+    margin-bottom: 1.5rem;
+  }
+
+  .era-manifesto {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .manifesto-item {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .manifesto-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 4px;
+    height: 4px;
+    background: var(--ash);
+    border-radius: 50%;
+  }
+
+  .manifesto-title {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--stone);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .manifesto-desc {
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.8;
+  }
+
+  /* ============ CULTURAL TIMING ============ */
+  #cultural-timing {
+    background: var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8rem 3.5rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .timing-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(45,59,46,0.15) 0%, transparent 70%);
+  }
+
+  .timing-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lichen);
+    margin-bottom: 4rem;
+  }
+
+  .timing-headline {
+    font-size: clamp(2rem, 5.5vw, 6rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    max-width: 900px;
+    margin-bottom: 5rem;
+  }
+
+  .timing-headline em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .timing-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    width: 100%;
+    max-width: 900px;
+    border-top: 1px solid var(--stone);
+    border-bottom: 1px solid var(--stone);
+  }
+
+  .stat-item {
+    padding: 3rem 2rem;
+    text-align: left;
+    border-right: 1px solid var(--stone);
+    position: relative;
+  }
+
+  .stat-item:last-child {
+    border-right: none;
+  }
+
+  .stat-num {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+    font-family: var(--serif);
+  }
+
+  .stat-label {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+  }
+
+  /* ============ PRODUCT VISION ============ */
+  #product-vision {
+    background: var(--stone);
+    padding: 8rem 3.5rem;
+    position: relative;
+  }
+
+  .product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 6rem;
+    border-bottom: 1px solid var(--ash);
+    padding-bottom: 3rem;
+  }
+
+  .product-title {
+    font-size: clamp(2rem, 4.5vw, 4.5rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    line-height: 1;
+  }
+
+  .product-title em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .product-caption {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--granite);
+    max-width: 300px;
+    line-height: 1.7;
+    text-align: right;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--ash);
+  }
+
+  .product-card {
+    background: var(--stone);
+    padding: 4rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.6s ease;
+  }
+
+  .product-card:hover {
+    background: #333330;
+  }
+
+  .product-card-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--ash);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .product-card-num::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ash);
+  }
+
+  .product-name {
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .product-name em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .product-desc {
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.85;
+    margin-bottom: 2.5rem;
+  }
+
+  .product-feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .product-feature-list li {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--lichen);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .product-feature-list li::before {
+    content: '—';
+    color: var(--ash);
+  }
+
+  .card-bg-shape {
+    position: absolute;
+    bottom: -3rem;
+    right: -3rem;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74,92,63,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ============ STRATEGIC VALUE ============ */
+  #strategic-value {
+    background: var(--cream);
+    padding: 8rem 3.5rem;
+    position: relative;
+  }
+
+  #strategic-value .hero-grain {
+    opacity: 0.02;
+    filter: invert(1);
+  }
+
+  .strategy-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .strategy-intro {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4rem;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .strategy-headline {
+    font-size: clamp(2rem, 4vw, 4rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--stone);
+    line-height: 1.05;
+  }
+
+  .strategy-headline em {
+    font-style: italic;
+    color: var(--ash);
+  }
+
+  .strategy-body {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--ash);
+    line-height: 1.9;
+  }
+
+  .value-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .value-label {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--granite);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--sand);
+    margin-bottom: 1rem;
+  }
+
+  .value-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .value-item-title {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--stone);
+  }
+
+  .value-item-desc {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.7;
+  }
+
+  /* ============ CAMPAIGN ============ */
+  #campaign {
+    background: var(--forest);
+    padding: 8rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .campaign-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 50% 80% at 10% 50%, rgba(0,0,0,0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 90% 80%, rgba(0,0,0,0.4) 0%, transparent 60%);
+  }
+
+  .campaign-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 250px 250px;
+  }
+
+  .campaign-inner {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .campaign-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lichen);
+    margin-bottom: 4rem;
+  }
+
+  .campaign-headline {
+    font-size: clamp(2.5rem, 6vw, 7rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    line-height: 0.9;
+    margin-bottom: 6rem;
+  }
+
+  .campaign-headline em {
+    font-style: italic;
+    color: var(--lichen);
+  }
+
+  .campaign-concepts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    border-top: 1px solid rgba(138,158,122,0.3);
+    padding-top: 4rem;
+  }
+
+  .concept-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .concept-num {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--lichen);
+    opacity: 0.6;
+  }
+
+  .concept-name {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .concept-name em {
+    font-style: italic;
+    color: var(--lichen);
+  }
+
+  .concept-desc {
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: rgba(184,176,164,0.7);
+    line-height: 1.85;
+  }
+
+  /* ============ ECOSYSTEM ============ */
+  #ecosystem {
+    background: var(--black);
+    padding: 8rem 3.5rem;
+    position: relative;
+  }
+
+  .eco-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(45,59,46,0.12) 0%, transparent 70%);
+  }
+
+  .eco-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .eco-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8rem;
+    align-items: end;
+    margin-bottom: 6rem;
+    padding-bottom: 4rem;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  .eco-headline {
+    font-size: clamp(2.5rem, 5vw, 5.5rem);
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .eco-headline em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .eco-body {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.9;
+  }
+
+  .eco-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 4rem;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--stone);
+    position: relative;
+  }
+
+  .timeline-item:last-child {
+    border-bottom: none;
+  }
+
+  .timeline-phase {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .phase-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+
+  .phase-num {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--stone);
+    letter-spacing: -0.03em;
+  }
+
+  .timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.3rem;
+  }
+
+  .timeline-name {
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--cream);
+    letter-spacing: -0.02em;
+  }
+
+  .timeline-desc {
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.8;
+    max-width: 600px;
+  }
+
+  /* ============ CLOSING ============ */
+  #closing {
+    background: var(--black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 3.5rem;
+    position: relative;
+  }
+
+  .closing-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 60% at 50% 50%, rgba(45,59,46,0.1) 0%, transparent 70%);
+  }
+
+  .closing-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--lichen);
+    margin-bottom: 4rem;
+  }
+
+  .closing-headline {
+    font-size: clamp(2.5rem, 7vw, 8rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: var(--cream);
+    line-height: 0.95;
+    max-width: 900px;
+    margin-bottom: 5rem;
+  }
+
+  .closing-headline em {
+    font-style: italic;
+    color: var(--sand);
+  }
+
+  .closing-body {
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--granite);
+    line-height: 1.9;
+    max-width: 480px;
+    margin-bottom: 5rem;
+  }
+
+  .closing-divider {
+    width: 1px;
+    height: 60px;
+    background: var(--stone);
+    margin: 0 auto 3rem;
+  }
+
+  .closing-mark {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  .closing-mark span {
+    color: var(--lichen);
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    background: var(--black);
+    border-top: 1px solid var(--stone);
+    padding: 2.5rem 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  .footer-center {
+    font-family: var(--serif);
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--ash);
+  }
+
+  .footer-right {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  /* ============ ANIMATIONS ============ */
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideLine {
+    0% { left: -100%; }
+    50%, 100% { left: 100%; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.35s; }
+  .reveal-delay-4 { transition-delay: 0.5s; }
+
+  /* HORIZONTAL RULE VARIANTS */
+  .rule {
+    width: 100%;
+    height: 1px;
+    background: var(--stone);
+    margin: 3rem 0;
+  }
+
+  /* SECTION MARKERS */
+  .section-counter {
+    position: absolute;
+    top: 3rem;
+    right: 3.5rem;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--ash);
+    text-transform: uppercase;
+  }
+
+  /* MISC */
+  .text-lichen { color: var(--lichen); }
+  .text-sand { color: var(--sand); }
+  .mt-sm { margin-top: 1rem; }
+  .mt-md { margin-top: 2rem; }
+  .mt-lg { margin-top: 3rem; }
+
+  /* LARGE BACKGROUND TEXT */
+  .bg-word {
+    position: absolute;
+    font-size: clamp(8rem, 20vw, 22rem);
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    opacity: 0.03;
+    pointer-events: none;
+    line-height: 1;
+    white-space: nowrap;
+    font-style: italic;
+    color: var(--linen);
+    user-select: none;
+  }
+
+  /* PARALLAX */
+  .parallax-slow {
+    will-change: transform;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-mark">Era × Patagonia</div>
+  <div class="nav-year">Intelligence for the Outdoors </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="bg-word" style="top: 5%; right: -5%; color: var(--forest); opacity: 0.08;">Wild</div>
+
+  <div class="hero-eyebrow">Era × Patagonia — Intelligence for the Outdoors</div>
+  <h1 class="hero-headline">
+    The most<br>
+    <em>intelligent objects</em><br>
+    you already own.
+  </h1>
+  <p class="hero-sub">
+    My proposal for two companies whose design language and core philosophy align with this vision: the best tools disappear into the life of the person who carries them.
+  </p>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <div class="scroll-text">Scroll to read</div>
+  </div>
+
+  <div class="hero-index"> Creative Strategy Proposal</div>
+</section>
+
+<!-- ============ WHY PATAGONIA ============ -->
+<section id="why-patagonia">
+  <div class="section-visual">
+    <div class="visual-fill"></div>
+    <div class="visual-texture"></div>
+    <div class="visual-number">01 / Why Patagonia</div>
+    <div class="visual-shape">
+      <svg class="contour-svg" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="0.8">
+        <ellipse cx="200" cy="200" rx="60" ry="180" stroke="currentColor" opacity="0.8"/>
+        <ellipse cx="200" cy="200" rx="90" ry="170" stroke="currentColor" opacity="0.6"/>
+        <ellipse cx="200" cy="200" rx="120" ry="155" stroke="currentColor" opacity="0.5"/>
+        <ellipse cx="200" cy="200" rx="145" ry="138" stroke="currentColor" opacity="0.4"/>
+        <ellipse cx="200" cy="200" rx="165" ry="118" stroke="currentColor" opacity="0.3"/>
+        <ellipse cx="200" cy="200" rx="180" ry="96" stroke="currentColor" opacity="0.2"/>
+        <ellipse cx="200" cy="200" rx="190" ry="70" stroke="currentColor" opacity="0.15"/>
+        <ellipse cx="200" cy="200" rx="195" ry="42" stroke="currentColor" opacity="0.1"/>
+        <circle cx="200" cy="200" r="198" stroke="currentColor" opacity="0.08"/>
+        <line x1="0" y1="200" x2="400" y2="200" stroke="currentColor" opacity="0.15"/>
+        <line x1="200" y1="0" x2="200" y2="400" stroke="currentColor" opacity="0.15"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="section-content">
+    <div class="section-tag reveal">Why Patagonia</div>
+    <h2 class="section-headline reveal reveal-delay-1">
+      Patagonia has built its brand around <br>emotional <em>storytelling</em><br>.
+    </h2>
+    <p class="section-body reveal reveal-delay-2">
+      Worn Wear, Patagonia’s repair, resale, and reuse program creates what no stale supply chain can replicate. One of my favorite sweaters is a 1998 Patagonia Synchilla in Storm Blue, I purchased from Worn Wear. After 29 years of use, repair, and experience, the jacket holds a history no new product can imitate. Decades of continued use, not just for my sweater, but for Patagonia products still floating around years later - reveal a massive oppurtunity for Era.
+    </p>
+    <div class="pull-quote reveal reveal-delay-3">
+      Patagonia's Mission: "We’re in business to save our home planet."
+    </div>
+    <p class="section-body reveal reveal-delay-4">
+      Yvon Chouinard (The founder) understood something that most tech companies have forgotten: when a product lasts for 2 years, the connection a person feels to an object can never fully form. The Worn Wear program isn't marketing, it's how Patagonia made their philosophy real.
+    </p>
+  </div>
+
+  <div class="section-counter">01</div>
+</section>
+
+<!-- ============ WHY ERA ============ -->
+<section id="why-era">
+  <div class="hero-grain"></div>
+  <div class="era-grid reveal">
+    <div class="era-left">
+      <div class="section-tag" style="color: var(--ash);">02 — Why Era</div>
+      <h2 class="era-headline">
+        Era Believes in Intelligence<br>that<br><em>disappears.</em>
+      </h2>
+      <p class="era-body">
+        Era was built on a conviction that most of the technology industry got wrong from the beginning: that the goal was never to make people more connected to their devices. The goal was to make people more present in their lives.
+      </p>
+      <p class="era-body">
+        The Era layer doesn't announce itself. It doesn't send notifications or ask for attention. It listens to the environment, learns from use, and quietly makes the object it inhabits a little more aware of where it is, what has happened before, and what might happen next.
+      </p>
+      <p class="era-body">
+        This is intelligence as material — embedded not as a feature, but as a quality. Like tempered glass or water-resistant membrane. Something you trust without thinking about it.
+      </p>
+    </div>
+    <div class="era-right">
+      <div class="era-manifesto">
+        
+        <div class="manifesto-item reveal reveal-delay-1">
+          <div class="manifesto-title">Technology should disappear into life.</div>
+          <div class="manifesto-desc">The best intelligence leaves no fingerprints. It simply makes the object more itself — more responsive to the person who chose it.</div>
+        </div>
+        <div class="manifesto-item reveal reveal-delay-2">
+          <div class="manifesto-title">Objects should feel chosen, not issued.</div>
+          <div class="manifesto-desc">The future of computing belongs to brands that already understand ritual, identity, and what it means to make something that ages beautifully.</div>
+        </div>
+        <div class="manifesto-item reveal reveal-delay-3">
+          <div class="manifesto-title">AI should feel like something you carry.</div>
+          <div class="manifesto-desc">Not a platform. Not a subscription. Not something imposed. Something personal — like the weight of a trusted tool in your hand.</div>
+        </div>
+        <div class="manifesto-item reveal reveal-delay-4">
+          <div class="manifesto-title">The physical world is the interface.</div>
+          <div class="manifesto-desc">Rain, altitude, cold, repetition. With the environment as an input the person is the output.</div>
+        </div>The object is the processor. 
+      </div>
+    </div>
+  </div>
+  <div class="section-counter" style="color: var(--granite);">02</div>
+</section>
+
+<!-- ============ CULTURAL TIMING ============ -->
+<section id="cultural-timing">
+  <div class="timing-bg"></div>
+  <div class="bg-word" style="bottom: -5%; left: -3%;">Silence</div>
+
+  <div class="timing-tag reveal">03 — Cultural Timing</div>
+  <h2 class="timing-headline reveal reveal-delay-1">
+    People are tired of<br>
+    <em>being pulled away</em><br>
+    from the world.
+  </h2>
+
+  <div class="timing-stats reveal reveal-delay-2">
+    <div class="stat-item">
+      <div class="stat-num">50%</div>
+      <div class="stat-label">of Millennials feel overwhelmed by how much time they spend on screens, and 50% of Americans have made a point to intentionally (per a Talker Research survey).</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">39B+</div>
+      <div class="stat-label">IoT devices are estimated to reach 39 billion by 2030, per IoT Analytics. Most from brands with no understanding of material culture.</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">81.1</div>
+      <div class="stat-label">million Americans participated in outdoor recreation in 2024, a record high, including 63 million hikers, the most popular outdoor activity measured (per the Outdoor Industry Association).</div>
+    </div>
+  </div>
+
+  <div class="section-counter">03</div>
+</section>
+
+<!-- ============ PRODUCT VISION ============ -->
+<section id="product-vision">
+  <div class="product-header reveal">
+    <h2 class="product-title">
+      Product<br><em>Ideas.</em>
+    </h2>
+    <p class="product-caption">
+      Four objects with four relationships between person, gear, and wilderness. *Not feesable yet, but still cool to think about where the company can go.
+    </p>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card reveal">
+      <div class="product-card-num">01</div>
+      <h3 class="product-name">The <em>Climate Memory</em> Jacket</h3>
+      <p class="product-desc">
+        A Patagonia shell that learns the weather patterns of the places its owner visits. Over seasons, it builds a quiet understanding of microclimates. For example, it knows the ridge that always gets wind from the northwest in late afternoon, the valley that holds cold longer than maps suggest. Before a trip, it simply reminds you. Not with an alert. With a soft change in weight.
+      </p>
+      <ul class="product-feature-list">
+        <li>Embedded environmental memory — no app required</li>
+        <li>Learns regional weather over months of use</li>
+        <li>Haptic language — pressure, not notification</li>
+        <li>Repairability preserved, intelligence survives repair</li>
+      </ul>
+      <div class="card-bg-shape"></div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-1">
+      <div class="product-card-num">02</div>
+      <h3 class="product-name">The <em>Adaptive</em> Pack</h3>
+      <p class="product-desc">
+        A backcountry pack that knows where it has been. Altitude history. Load distribution over time. Routes traveled, terrain types encountered. The longer you use it, the more it understands how you move — and begins to anticipate. 
+      </p>
+      <ul class="product-feature-list">
+        <li>Route and terrain memory embedded in the frame</li>
+        <li>Load intelligence — knows when you're over-extended</li>
+        <li>Adapts to the body that uses it over years</li>
+        <li>No battery — harvests kinetic and thermal energy</li>
+      </ul>
+      <div class="card-bg-shape"></div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-2">
+      <div class="product-card-num">03</div>
+      <h3 class="product-name"><em>Emergency</em> Intelligence</h3>
+      <p class="product-desc">
+        A survival layer embedded invisibly into expedition gear — not a device, not an add-on. Intelligence that rests entirely dormant until the environmental or biometric conditions that warrant it arrive. It exists only for the moment when existing matters most.
+      </p>
+      <ul class="product-feature-list">
+        <li>Dormant until triggered by genuine emergency conditions</li>
+        <li>Environmental + biometric awareness</li>
+        <li>Communicates without devices or signal infrastructure</li>
+        <li>Designed to function in the conditions that destroy other technology</li>
+      </ul>
+      <div class="card-bg-shape"></div>
+    </div>
+
+    <div class="product-card reveal reveal-delay-3">
+      <div class="product-card-num">04</div>
+      <h3 class="product-name">Worn Wear <em>Objects</em></h3>
+      <p class="product-desc">
+        A Worn Wear edition where the Era layer evolves with the repair history of the object. Each repair adds to its memory. Worn Wear carries a record of decisions, weather, journeys. The same concept behind way 20 year olds keep the 3x3 blanket they loved as a kid.
+      </p>
+      <ul class="product-feature-list">
+        <li>Intelligence deepens with each repair cycle</li>
+        <li>Repair history becomes embedded memory</li>
+        <li>Objects appreciate in intelligence, not depreciate</li>
+        <li>Limited artist-designed series — numbered, named</li>
+      </ul>
+      <div class="card-bg-shape"></div>
+    </div>
+  </div>
+
+  <div class="section-counter">04</div>
+</section>
+
+<!-- ============ CAMPAIGN ============ -->
+<section id="campaign">
+  <div class="campaign-bg"></div>
+  <div class="campaign-grain"></div>
+
+  <div class="campaign-inner">
+    <div class="campaign-tag reveal">05 — Launch Campaign Concept</div>
+    <h2 class="campaign-headline reveal reveal-delay-1">
+      <em>Marketing </em><br>
+      Campaigns.
+    </h2>
+
+    <div class="campaign-concepts">
+      <div class="concept-item reveal">
+        <div class="concept-num">I.</div>
+        <div class="concept-name">The <em>Worn Wear</em> Chronicles</div>
+        <div class="concept-desc">
+          Pataongia has always utilized cinimatic video and breathtaking scenes to create stunning short films. I'm sugesting we produce a series of short films — each following a different Patagonia garment through 10 years of use, repair, and wilderness.
+        </div>
+      </div>
+      <div class="concept-item reveal reveal-delay-1">
+        <div class="concept-num">II.</div>
+        <div class="concept-name"><em>Limited</em> Editions</div>
+        <div class="concept-desc">
+          Everyone loves something they can't have. A limited expedition collection — each piece numbered and named for a specific wilderness. The Black Canyon Jacket. The Patagonia Pack. The Yosemite Shell. 
+        </div>
+      </div>
+      <div class="concept-item reveal reveal-delay-2">
+        <div class="concept-num">III.</div>
+        <div class="concept-name">The <em>Silence</em> Campaign</div>
+        <div class="concept-desc">
+          Advertising that's focused on people interacting with our products in person, not online. Seeing it in their mom and pop gear shop with a QR code that explains its purpose, for example.
+  </div>
+
+  <div class="section-counter" style="color: rgba(138,158,122,0.4);">06</div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section id="closing">
+  <div class="closing-bg"></div>
+  <div class="bg-word" style="top: 10%; left: 50%; transform: translateX(-50%); opacity: 0.025;">Trust</div>
+
+  <div class="closing-eyebrow reveal">08 — A Closing Statement</div>
+  <h2 class="closing-headline reveal reveal-delay-1">
+    We don't need<br>
+    to come up with new products.<br>
+    <em>We need to build on what we already know.</em>
+  </h2>
+  <p class="closing-body reveal reveal-delay-2">
+    Most new technology these days asks you to change the way you go about your day. It's intusive, to learn new interfaces, to carry new devices, to divide your attention between your life and your screen.
+    <br><br>
+    This partnership simply makes the object you already carry a little more aware of the world you both move through together.
+    <br><br>
+    The ambition with this pitch is to disappear into the life of the person who chose the object. To earn the user's trust through time, through use, adn withi intellligence.
+  </p>
+  <div class="closing-divider reveal reveal-delay-3"></div>
+  <div class="closing-mark reveal reveal-delay-4">
+    <span>Era</span> × <span>Patagonia</span> — Intelligence for the Outdoors<br>
+    A Creative Strategy Proposal 
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">Era.world</div>
+  <div class="footer-center">Intelligence for the Outdoors</div>
+  <div class="footer-right">Patagonia × Era</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  document.querySelectorAll('a, button, .product-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
+  });
+
+  // Scroll reveal
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Subtle parallax on bg-word elements
+  document.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    document.querySelectorAll('.bg-word').forEach((el, i) => {
+      const speed = 0.03 + (i * 0.01);
+      el.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+  });
+</script>
+
+</body>
+</html>
